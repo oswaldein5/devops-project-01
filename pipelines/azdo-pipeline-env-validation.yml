@@ -31,7 +31,7 @@ jobs:
         displayName: "Show branch name"
       - script: |
           echo "Working directory: $(workingDirectory)"
-          if [ -d "$(workingDirectory)/app-ecolac-fuentes" ] && \
+          if [ -d "$(workingDirectory)/php-app" ] && \
             [ -d "$(workingDirectory)/srv-bd" ] && \
             [ -d "$(workingDirectory)/srv-web" ] && \
             [ -d "$(workingDirectory)/terraform" ] && \

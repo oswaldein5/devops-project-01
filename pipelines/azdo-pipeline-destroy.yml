@@ -11,7 +11,7 @@ trigger:
 # The pipeline is scheduled to execute at 6:00 AM UTC (1:00 AM Ecuador)
 schedules:
   - cron: "0 6 * * *"
-    displayName: "Destruir la infraestructura en AWS todos los dias [1:00 AM] en la rama: main"
+    displayName: "Destroying infrastructure on AWS every day [1:00 AM] on branch: main"
     branches:
       include:
         - main
