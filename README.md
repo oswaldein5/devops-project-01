@@ -4,15 +4,15 @@ Implementing CI/CD pipeline using Azure DevOps and deploying Infrastructure on A
 ## Diagrams
 
 ### Diagram 1: Containerization and deployment
-![Containerization and deployment](diagrams/Container.png)
+<img src="diagrams/Container.png" alt="Containerization and deployment" width="50%">
 
 ### Diagram 2: Infrastructure Architecture on AWS with Terraform
-![Infrastructure Architecture on AWS with Terraform](diagrams/Terraform.png)
+<img src="diagrams/Terraform.png" alt="Infrastructure Architecture on AWS with Terraform" width="50%">
 
 ### Diagram 3: CI/CD Pipelines
-![CI/CD Pipeline](diagrams/Pipeline-CICD.png)
+<img src="diagrams/Pipeline-CICD.png" alt="CI/CD Pipeline" width="50%">
 
-![CI/CD Pipeline](diagrams/Pipeline-Destroy.png)
+<img src="diagrams/Pipeline-Destroy.png" alt="CI/CD Pipeline" width="50%">
 
 ### Diagram 4: Cloud Architecture on AWS
-![Cloud Architecture on AWS](diagrams/AWS.png)
+<img src="diagrams/AWS.png" alt="Cloud Architecture on AWS" width="50%">
