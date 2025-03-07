@@ -17,7 +17,7 @@ ec2_specs = [
 ] # EC2 instance specifications
 
 # Git repository URL
-git_repo_url = "https://token@oswaldo.visualstudio.com/repo/_git/repo"
+git_repo_url = "https://token@user/project/_git/repo"
 
 git_branch = "main" # Git repository branch (Production environment)
 

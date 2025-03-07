@@ -17,7 +17,7 @@
 # - Application files in `/home/ubuntu/EcolacMigracion`.
 
 # Author:    Oswaldo Solano
-# Date:      01/Feb/2024
+# Date:      01/Feb/2025
 # Version:   1.0
 
 # Variables
@@ -37,8 +37,8 @@ sudo systemctl start docker
 sudo systemctl enable docker
 
 # Add the current user to the Docker group
-# sudo usermod -aG docker ubuntu
-sudo usermod -aG docker vagrant
+sudo usermod -aG docker ubuntu
+# sudo usermod -aG docker vagrant
 
 # Configure AWS credentials (only if not using IAM roles)
 export AWS_ACCESS_KEY_ID="XXXXXXXXX"
@@ -53,7 +53,7 @@ ADMIN_PASSWORD=$(echo "$MYSQL_ADMIN_CREDENTIALS" | jq -r '.password')
 MYSQL_ROOT_PASSWORD=$(echo "$MYSQL_ROOT_CREDENTIALS" | jq -r '.password')
 
 # Go to the application directory
-cd /home/ubuntu/devops-project || exit
+cd /home/ubuntu/repo || exit
 # cd /home/vagrant/srv-bd || exit
 
 # Build the Docker image for MySQL
@@ -72,5 +72,5 @@ docker run -d -p 3306:3306 --name mysql-ct \
 # Clean up installation and temporary files
 sudo apt-get clean
 sudo rm -rf /var/lib/apt/lists/*
-sudo rm -rf /home/ubuntu/php-app/awscliv2.zip
-sudo rm -rf /home/ubuntu/php-app/aws
+sudo rm -rf /home/ubuntu/repo/*.zip
+sudo rm -rf /home/ubuntu/repo/aws

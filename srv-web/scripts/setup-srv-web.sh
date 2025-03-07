@@ -40,8 +40,8 @@ sudo systemctl start docker
 sudo systemctl enable docker
 
 # Add the current user to the Docker group
-# sudo usermod -aG docker ubuntu
-sudo usermod -aG docker vagrant
+sudo usermod -aG docker ubuntu
+# sudo usermod -aG docker vagrant
 
 # Configure AWS credentials (only if IAM roles are not used)
 export AWS_ACCESS_KEY_ID="XXXXXXXXX"
@@ -59,7 +59,7 @@ DEMO_USERNAME=$(echo "$DEMO_USER_CREDENTIALS" | jq -r '.username')
 DEMO_PASSWORD=$(echo "$DEMO_USER_CREDENTIALS" | jq -r '.password')
 
 # Go to the application directory
-cd /home/ubuntu/devops-project || exit
+cd /home/ubuntu/repo || exit
 # cd /home/vagrant || exit
 
 # Build the Docker image
@@ -80,5 +80,5 @@ docker run -d -p 80:80 --name apache-php-ct \
 # Clean up installation and temporary files
 sudo apt-get clean
 sudo rm -rf /var/lib/apt/lists/*
-sudo rm -rf /home/ubuntu/devops-project/awscliv2.zip
-sudo rm -rf /home/ubuntu/devops-project/aws
+sudo rm -rf /home/ubuntu/repo/*.zip
+sudo rm -rf /home/ubuntu/repo/aws
