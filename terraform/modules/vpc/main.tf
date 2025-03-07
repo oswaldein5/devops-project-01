@@ -1,6 +1,6 @@
-#* Módulo para crear todos los recursos necesarios para la Virtual Private Cloud (VPC)
+# Module to create all necessary resources for the Virtual Private Cloud (VPC)
 
-#* Recurso para crear una VPC en AWS con soporte de DNS y etiquetas
+# Resource to create a VPC in AWS with DNS support and tags
 resource "aws_vpc" "vpc_main" {
   cidr_block           = var.virginia_cidr
   enable_dns_support   = true
@@ -11,7 +11,7 @@ resource "aws_vpc" "vpc_main" {
   }
 }
 
-#* Recurso para crear una subred pública por cada zona de disponibilidad en la región us-east-1
+# Resource to create a public subnet for each availability zone in the us-east-1 region
 resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.vpc_main.id
   count             = length(var.vpc_availability_zones)
@@ -22,7 +22,7 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
-#* Recurso para crear una subred privada por cada zona de disponibilidad en la región us-east-1
+# Resource to create a private subnet for each availability zone in the us-east-1 region
 resource "aws_subnet" "private_subnet" {
   vpc_id            = aws_vpc.vpc_main.id
   count             = length(var.vpc_availability_zones)
@@ -33,7 +33,7 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
-#* Recurso para crear una puerta de enlace de internet (Internet Gateway)
+# Resource to create an Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc_main.id
 
@@ -42,7 +42,7 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-#* Recurso para crear un NAT gateway para la subred pública en la zona de disponibilidad us-east-1a
+# Resource to create a NAT gateway for the public subnet in the us-east-1a availability zone
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.eip.id
   subnet_id     = element(aws_subnet.public_subnet[*].id, 0)
@@ -54,7 +54,7 @@ resource "aws_nat_gateway" "nat_gateway" {
   depends_on = [aws_internet_gateway.igw]
 }
 
-#* Recurso para crear una dirección IP elástica (Elastic IP) para el NAT Gateway
+# Resource to create an Elastic IP for the NAT Gateway
 resource "aws_eip" "eip" {
   domain = "vpc"
 
@@ -65,7 +65,7 @@ resource "aws_eip" "eip" {
   depends_on = [aws_internet_gateway.igw]
 }
 
-#* Recurso para crear una tabla de rutas (Route Table) para subredes públicas
+# Resource to create a Route Table for public subnets
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.vpc_main.id
 
@@ -81,14 +81,14 @@ resource "aws_route_table" "public_rt" {
   }
 }
 
-#* Asociación de la tabla de rutas pública a las subredes públicas
+# Association of the public route table to the public subnets
 resource "aws_route_table_association" "public_subnet_association" {
   route_table_id = aws_route_table.public_rt.id
   count          = length(var.vpc_availability_zones)
   subnet_id      = element(aws_subnet.public_subnet[*].id, count.index)
 }
 
-#* Recurso para crear una tabla de rutas (Route Table) para subredes privadas
+# Resource to create a Route Table for private subnets
 resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.vpc_main.id
 
@@ -104,7 +104,7 @@ resource "aws_route_table" "private_rt" {
   }
 }
 
-#* Asociación de la tabla de rutas privada a las subredes privadas
+# Association of the private route table to the private subnets
 resource "aws_route_table_association" "private_subnet_association" {
   route_table_id = aws_route_table.private_rt.id
   count          = length(var.vpc_availability_zones)

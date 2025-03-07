@@ -1,15 +1,15 @@
-#* Definición de variables
+#* Variable definitions
 
-variable "min_instances" {}            # El número de instancias min. (Apache-PHP) a crear con Auto Scaling Group (ASG)
-variable "max_instances" {}            # El número de instancias max. (Apache-PHP) a crear con Auto Scaling Group (ASG)
-variable "ec2_specs" {}                # Especificaciones de la instancia EC2
-variable "git_repo_url" {}             # URL del repositorio Git
-variable "git_branch" {}               # Rama del repositorio Git
-variable "private_subnet_ids" {}       # ID asignado a la IP privada de cada instancia (Apache-PHP y MySQL)
-variable "public_subnet_bastion_id" {} # Id asignado a la IP pública de la instancia Bastion
-variable "internet_gateway_id" {}      # ID asignado al Internet Gateway
-variable "sg_srv_web_id" {}            # ID del grupo de seguridad asignado para las instancias LAMP
-variable "sg_srv_mysql_id" {}          # ID del grupo de seguridad asignado para la instancia MySQL
-variable "sg_bastion_id" {}            # ID del grupo de seguridad asignado para la instancia Bastion
-variable "alb_target_group_arn" {}     # ARN del target group del ALB
-variable "sufix" {}                    # Etiquetas del proyecto agregadas al Name tags de cada recurso
+variable "min_instances" {}            # The minimum number of instances (Apache-PHP) to create with Auto Scaling Group (ASG)
+variable "max_instances" {}            # The maximum number of instances (Apache-PHP) to create with Auto Scaling Group (ASG)
+variable "ec2_specs" {}                # EC2 instance specifications
+variable "git_repo_url" {}             # Git repository URL
+variable "git_branch" {}               # Git repository branch
+variable "private_subnet_ids" {}       # ID assigned to the private IP of each instance (Apache-PHP and MySQL)
+variable "public_subnet_bastion_id" {} # ID assigned to the public IP of the Bastion instance
+variable "internet_gateway_id" {}      # ID assigned to the Internet Gateway
+variable "sg_srv_web_id" {}            # Security group ID assigned to the LAMP instances
+variable "sg_srv_mysql_id" {}          # Security group ID assigned to the MySQL instance
+variable "sg_bastion_id" {}            # Security group ID assigned to the Bastion instance
+variable "alb_target_group_arn" {}     # ARN of the ALB target group
+variable "sufix" {}                    # Project tags added to the Name tags of each resource

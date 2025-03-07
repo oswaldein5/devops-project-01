@@ -43,7 +43,7 @@ stages:
               command: "init"
               workingDirectory: "$(workingDirectory)"
               backendServiceAWS: "AWSconn"
-              backendAWSBucketName: "bucket-ecolac-prod-01032025"
+              backendAWSBucketName: "bucket-prod-01032025"
               backendAWSKey: "terraform.tfstate"
           - task: TerraformTaskV4@4
             displayName: Terraform plan

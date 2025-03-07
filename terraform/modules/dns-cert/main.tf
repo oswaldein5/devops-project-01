@@ -1,7 +1,7 @@
-#* Recurso para crear un certificado SSL con ACM, una zona privada de Route 53 
-#* y registros tipo "A" para las instancias EC2 Apache-PHP y MySQL
+# Resource to create an SSL certificate with ACM, a private Route 53 zone, 
+# and "A" records for Apache-PHP and MySQL EC2 instances
 
-#* Crear una zona privada de Route 53 para el servidor MySQL
+# Create a private Route 53 zone for the MySQL server
 resource "aws_route53_zone" "private_zone" {
   name = var.domain_name
 
@@ -14,7 +14,7 @@ resource "aws_route53_zone" "private_zone" {
   }
 }
 
-#* Crear registro tipo "A" en Route 53 para las instancias EC2 Apache-PHP en la zona publica
+# Create an "A" record in Route 53 for the Apache-PHP EC2 instances in the public zone
 resource "aws_route53_record" "ec2_srv_web_record" {
   zone_id = data.aws_route53_zone.public_zone.id
 
@@ -28,7 +28,7 @@ resource "aws_route53_record" "ec2_srv_web_record" {
   }
 }
 
-#* Crear registro tipo "A" en Route 53 para las instancia EC2 MySQL en la zona privada
+# Create an "A" record in Route 53 for the MySQL EC2 instance in the private zone
 resource "aws_route53_record" "ec2_mysql_record" {
   zone_id = aws_route53_zone.private_zone.id
   name    = "srv-bd.${var.domain_name}"
@@ -37,7 +37,7 @@ resource "aws_route53_record" "ec2_mysql_record" {
   records = [var.ec2_mysql_private_ip]
 }
 
-#* Certificado SSL con ACM
+# SSL certificate with ACM
 resource "aws_acm_certificate" "cert_acm" {
   domain_name               = var.domain_name
   subject_alternative_names = ["*.${var.domain_name}"]
@@ -51,7 +51,7 @@ resource "aws_acm_certificate" "cert_acm" {
   }
 }
 
-#* Crear los registros DNS necesarios para la validación del certificado
+# Create the necessary DNS records for certificate validation
 resource "aws_route53_record" "cert_validation_record" {
   zone_id = data.aws_route53_zone.public_zone.id
 
@@ -69,10 +69,10 @@ resource "aws_route53_record" "cert_validation_record" {
   type            = each.value.type
 }
 
-#* Validar certificado SSL existente con ACM
+# Validate existing SSL certificate with ACM
 resource "aws_acm_certificate_validation" "cert_validation" {
   timeouts {
-    create = "5m" # Aumentar el tiempo de espera a 5 minutos
+    create = "5m" # Increase the timeout to 5 minutes
   }
   certificate_arn         = aws_acm_certificate.cert_acm.arn
   validation_record_fqdns = [for record in aws_route53_record.cert_validation_record : record.fqdn]

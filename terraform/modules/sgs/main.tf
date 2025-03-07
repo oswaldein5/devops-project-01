@@ -1,17 +1,17 @@
-#* Módulo para crear todos los recursos necesarios para los Grupos de Seguridad (Security Groups)
+# Module to create all necessary resources for Security Groups
 
-#* Recurso para crear un grupo de seguridad para el Application Load Balancer (ALB)
+# Resource to create a security group for the Application Load Balancer (ALB)
 resource "aws_security_group" "sg_alb" {
   name        = "sg_alb"
   vpc_id      = var.vpc_id
-  description = "Grupo de seguridad para el Application Load Balancer (ALB)"
+  description = "Security group for the Application Load Balancer (ALB)"
 
   tags = {
     Name = "sg-alb-${var.sufix}"
   }
 }
 
-#* Regla de entrada para permitir el tráfico entrante desde Internet al puerto 80 en el ALB
+# Ingress rule to allow incoming traffic from the Internet to port 80 on the ALB
 resource "aws_security_group_rule" "ingress_alb_traffic_http" {
   security_group_id = aws_security_group.sg_alb.id
   type              = "ingress"
@@ -22,7 +22,7 @@ resource "aws_security_group_rule" "ingress_alb_traffic_http" {
   description       = "Ingress HTTP"
 }
 
-#* Regla de entrada para permitir el tráfico entrante desde Internet al puerto 443 en el ALB
+# Ingress rule to allow incoming traffic from the Internet to port 443 on the ALB
 resource "aws_security_group_rule" "ingress_alb_traffic_https" {
   security_group_id = aws_security_group.sg_alb.id
   type              = "ingress"
@@ -33,7 +33,7 @@ resource "aws_security_group_rule" "ingress_alb_traffic_https" {
   description       = "Ingress HTTPS"
 }
 
-#* Regla de salida para permitir el tráfico HTTP a la instancia Apache-PHP
+# Egress rule to allow HTTP traffic to the Apache-PHP instance
 resource "aws_security_group_rule" "egress_alb_traffic_http" {
   security_group_id        = aws_security_group.sg_alb.id
   source_security_group_id = aws_security_group.sg_srv_web.id
@@ -44,7 +44,7 @@ resource "aws_security_group_rule" "egress_alb_traffic_http" {
   description              = "Egress HTTP"
 }
 
-#* Regla de salida para permitir el tráfico HTTPS a la instancia Apache-PHP
+# Egress rule to allow HTTPS traffic to the Apache-PHP instance
 resource "aws_security_group_rule" "egress_alb_traffic_https" {
   security_group_id        = aws_security_group.sg_alb.id
   source_security_group_id = aws_security_group.sg_srv_web.id
@@ -55,18 +55,18 @@ resource "aws_security_group_rule" "egress_alb_traffic_https" {
   description              = "Egress HTTPS"
 }
 
-#* Recurso para crear un grupo de seguridad para la instancia EC2 (Apache-PHP)
+# Resource to create a security group for the EC2 instance (Apache-PHP)
 resource "aws_security_group" "sg_srv_web" {
   name        = "sg_srv_web"
   vpc_id      = var.vpc_id
-  description = "Grupo de seguridad para instancia EC2 (Apache-PHP)"
+  description = "Security group for EC2 instance (Apache-PHP)"
 
   tags = {
     Name = "sg-srv-web-${var.sufix}"
   }
 }
 
-#* Regla de entrada para permitir el tráfico ICMP desde la VPC (10.0.0.0/16)
+# Ingress rule to allow ICMP traffic from the VPC (10.0.0.0/16)
 resource "aws_security_group_rule" "sgr_srv_web_ingress_icmp" {
   security_group_id = aws_security_group.sg_srv_web.id
   type              = "ingress"
@@ -77,7 +77,7 @@ resource "aws_security_group_rule" "sgr_srv_web_ingress_icmp" {
   description       = "Ingress ICMP"
 }
 
-#* Regla de entrada para permitir el tráfico SSH entrante desde la instancia Bastion
+# Ingress rule to allow SSH traffic from the Bastion instance
 resource "aws_security_group_rule" "sgr_srv_web_ingress_ssh" {
   security_group_id        = aws_security_group.sg_srv_web.id
   source_security_group_id = aws_security_group.sg_bastion.id
@@ -88,7 +88,7 @@ resource "aws_security_group_rule" "sgr_srv_web_ingress_ssh" {
   description              = "Ingress SSH"
 }
 
-#* Regla de entrada para permitir el tráfico HTTP entrante desde el ALB
+# Ingress rule to allow HTTP traffic from the ALB
 resource "aws_security_group_rule" "sgr_srv_web_ingress_http" {
   security_group_id        = aws_security_group.sg_srv_web.id
   source_security_group_id = aws_security_group.sg_alb.id
@@ -96,10 +96,10 @@ resource "aws_security_group_rule" "sgr_srv_web_ingress_http" {
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  description              = "Ingress HTTP desde ALB"
+  description              = "Ingress HTTP from ALB"
 }
 
-#* Regla de entrada para permitir el tráfico HTTPS entrante desde el ALB
+# Ingress rule to allow HTTPS traffic from the ALB
 resource "aws_security_group_rule" "sgr_srv_web_ingress_https" {
   security_group_id        = aws_security_group.sg_srv_web.id
   source_security_group_id = aws_security_group.sg_alb.id
@@ -107,10 +107,10 @@ resource "aws_security_group_rule" "sgr_srv_web_ingress_https" {
   from_port                = 443
   to_port                  = 443
   protocol                 = "tcp"
-  description              = "Ingress HTTPS desde ALB"
+  description              = "Ingress HTTPS from ALB"
 }
 
-#* Regla de salida para permitir tráfico HTTP a Internet desde sg_srv_web
+# Egress rule to allow HTTP traffic to the Internet from sg_srv_web
 resource "aws_security_group_rule" "sgr_srv_web_egress_http" {
   security_group_id = aws_security_group.sg_srv_web.id
   type              = "egress"
@@ -121,7 +121,7 @@ resource "aws_security_group_rule" "sgr_srv_web_egress_http" {
   description       = "Egress HTTP"
 }
 
-#* Regla de salida para permitir tráfico HTTPS a Internet desde sg_srv_web
+# Egress rule to allow HTTPS traffic to the Internet from sg_srv_web
 resource "aws_security_group_rule" "sgr_srv_web_egress_https" {
   security_group_id = aws_security_group.sg_srv_web.id
   type              = "egress"
@@ -132,7 +132,7 @@ resource "aws_security_group_rule" "sgr_srv_web_egress_https" {
   description       = "Egress HTTPS"
 }
 
-#* Regla de salida para permitir el tráfico ICMP desde la VPC (10.0.0.0/16)
+# Egress rule to allow ICMP traffic from the VPC (10.0.0.0/16)
 resource "aws_security_group_rule" "sgr_srv_web_egress_icmp" {
   security_group_id = aws_security_group.sg_srv_web.id
   type              = "egress"
@@ -143,7 +143,7 @@ resource "aws_security_group_rule" "sgr_srv_web_egress_icmp" {
   description       = "Egress ICMP"
 }
 
-#* Regla de salida para permitir el tráfico tcp/3306 desde la VPC (10.0.0.0/16)
+# Egress rule to allow tcp/3306 traffic from the VPC (10.0.0.0/16)
 resource "aws_security_group_rule" "sgr_srv_web_egress_db" {
   security_group_id = aws_security_group.sg_srv_web.id
   type              = "egress"
@@ -154,18 +154,18 @@ resource "aws_security_group_rule" "sgr_srv_web_egress_db" {
   description       = "Egress tcp/3306"
 }
 
-#* Recurso para crear un grupo de seguridad para la instancia EC2 (MySQL)
+# Resource to create a security group for the EC2 instance (MySQL)
 resource "aws_security_group" "sg_srv_mysql" {
   name        = "sg_srv_mysql"
   vpc_id      = var.vpc_id
-  description = "Grupo de seguridad para instancia EC2 (MySQL)"
+  description = "Security group for EC2 instance (MySQL)"
 
   tags = {
     Name = "sg-srv-mysql-${var.sufix}"
   }
 }
 
-#* Regla de entrada para permitir el tráfico ICMP desde la VPC (10.0.0.0/16)
+# Ingress rule to allow ICMP traffic from the VPC (10.0.0.0/16)
 resource "aws_security_group_rule" "sgr_srv_mysql_ingress_icmp" {
   security_group_id = aws_security_group.sg_srv_mysql.id
   type              = "ingress"
@@ -176,7 +176,7 @@ resource "aws_security_group_rule" "sgr_srv_mysql_ingress_icmp" {
   description       = "Ingress ICMP"
 }
 
-#* Regla de entrada para permitir el tráfico SSH entrante desde la instancia Bastion
+# Ingress rule to allow SSH traffic from the Bastion instance
 resource "aws_security_group_rule" "sgr_srv_mysql_ingress_ssh" {
   security_group_id        = aws_security_group.sg_srv_mysql.id
   source_security_group_id = aws_security_group.sg_bastion.id
@@ -187,7 +187,7 @@ resource "aws_security_group_rule" "sgr_srv_mysql_ingress_ssh" {
   description              = "Ingress SSH"
 }
 
-#* Regla de entrada para permitir el tráfico tcp/3306 desde la VPC (10.0.0.0/16)
+# Ingress rule to allow tcp/3306 traffic from the VPC (10.0.0.0/16)
 resource "aws_security_group_rule" "sgr_srv_mysql_ingress_db" {
   security_group_id = aws_security_group.sg_srv_mysql.id
   type              = "ingress"
@@ -198,7 +198,7 @@ resource "aws_security_group_rule" "sgr_srv_mysql_ingress_db" {
   description       = "Ingress tcp/3306"
 }
 
-#* Regla de salida para permitir tráfico HTTP a Internet desde sg_srv_mysql
+# Egress rule to allow HTTP traffic to the Internet from sg_srv_mysql
 resource "aws_security_group_rule" "sgr_srv_mysql_egress_http" {
   security_group_id = aws_security_group.sg_srv_mysql.id
   type              = "egress"
@@ -209,7 +209,7 @@ resource "aws_security_group_rule" "sgr_srv_mysql_egress_http" {
   description       = "Egress HTTP"
 }
 
-#* Regla de salida para permitir tráfico HTTPS a Internet desde sg_srv_mysql
+# Egress rule to allow HTTPS traffic to the Internet from sg_srv_mysql
 resource "aws_security_group_rule" "sgr_srv_mysql_egress_https" {
   security_group_id = aws_security_group.sg_srv_mysql.id
   type              = "egress"
@@ -220,7 +220,7 @@ resource "aws_security_group_rule" "sgr_srv_mysql_egress_https" {
   description       = "Egress HTTPS"
 }
 
-#* Regla de salida para permitir el tráfico ICMP desde la VPC (10.0.0.0/16)
+# Egress rule to allow ICMP traffic from the VPC (10.0.0.0/16)
 resource "aws_security_group_rule" "sgr_srv_mysql_egress_icmp" {
   security_group_id = aws_security_group.sg_srv_mysql.id
   type              = "egress"
@@ -231,29 +231,29 @@ resource "aws_security_group_rule" "sgr_srv_mysql_egress_icmp" {
   description       = "Egress ICMP"
 }
 
-#* Recurso para crear un grupo de seguridad para la instancia EC2 (Bastion)
+# Resource to create a security group for the EC2 instance (Bastion)
 resource "aws_security_group" "sg_bastion" {
   name        = "sg_bastion"
   vpc_id      = var.vpc_id
-  description = "Grupo de seguridad para instancia EC2 (Bastion)"
+  description = "Security group for EC2 instance (Bastion)"
 
   tags = {
     Name = "sg-bastion-${var.sufix}"
   }
 }
 
-#* Regla de entrada para permitir el tráfico SSH desde una IP pública
+# Ingress rule to allow SSH traffic from a public IP
 resource "aws_security_group_rule" "sgr_bastion_ingress_ssh" {
   security_group_id = aws_security_group.sg_bastion.id
   type              = "ingress"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"] # IP pública de los Administradores
+  cidr_blocks       = ["0.0.0.0/0"] # Public IP of Administrators
   description       = "Ingress SSH"
 }
 
-#* Regla de salida para permitir el tráfico SSH desde la VPC (10.0.0.0/16)
+# Egress rule to allow SSH traffic from the VPC (10.0.0.0/16)
 resource "aws_security_group_rule" "sgr_bastion_egress_ssh" {
   security_group_id = aws_security_group.sg_bastion.id
   type              = "egress"
@@ -264,7 +264,7 @@ resource "aws_security_group_rule" "sgr_bastion_egress_ssh" {
   description       = "Egress SSH"
 }
 
-#* Regla de salida para permitir el tráfico ICMP desde la VPC (10.0.0.0/16)
+# Egress rule to allow ICMP traffic from the VPC (10.0.0.0/16)
 resource "aws_security_group_rule" "sgr_bastion_egress_icmp" {
   security_group_id = aws_security_group.sg_bastion.id
   type              = "egress"

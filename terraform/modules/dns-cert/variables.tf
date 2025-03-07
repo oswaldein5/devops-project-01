@@ -1,8 +1,8 @@
-#* Definición de variables
+#* Variable definitions
 
-variable "vpc_id" {}               # ID asignado al VPC
-variable "ec2_mysql_private_ip" {} # IP privada asignada a la instancia MySQL
-variable "alb_dns_name" {}         # Nombre DNS asignado al ALB
-variable "alb_zone_id" {}          # ID de la zona del ALB
-variable "domain_name" {}          # Dominio a usar para la resolución de nombres (DNS)
-variable "sufix" {}                # Etiquetas del proyecto agregadas al Name tags de cada recurso
+variable "vpc_id" {}               # ID assigned to the VPC
+variable "ec2_mysql_private_ip" {} # Private IP assigned to the MySQL instance
+variable "alb_dns_name" {}         # DNS name assigned to the ALB
+variable "alb_zone_id" {}          # Zone ID of the ALB
+variable "domain_name" {}          # Domain to use for DNS resolution
+variable "sufix" {}                # Project tags added to the Name tags of each resource

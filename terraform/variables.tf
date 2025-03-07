@@ -1,21 +1,21 @@
-#* Definición de variables en el contexto global
+#* Definition of variables in the global context
 variable "virginia_cidr" {
-  description = "Segmento de red a usar en el VPC de la región Virginia (us-east-1)"
+  description = "Network segment to use in the VPC of the Virginia region (us-east-1)"
   type        = string
 }
 
 variable "vpc_availability_zones" {
-  description = "Zonas de disponibilidad a usar en la región Virginia (us-east-1)"
+  description = "Availability zones to use in the Virginia region (us-east-1)"
   type        = list(string)
 }
 
 variable "min_instances" {
-  description = "El número de instancias min. (Apache-PHP) a crear con Auto Scaling Group (ASG)"
+  description = "The minimum number of instances (Apache-PHP) to create with Auto Scaling Group (ASG)"
   type        = number
 }
 
 variable "max_instances" {
-  description = "El número de instancias max. (Apache-PHP) a crear con Auto Scaling Group (ASG)"
+  description = "The maximum number of instances (Apache-PHP) to create with Auto Scaling Group (ASG)"
   type        = number
 }
 
@@ -27,21 +27,21 @@ variable "ec2_specs" {
 }
 
 variable "git_repo_url" {
-  description = "URL del repo Git con el código fuente y demás archivos del proyecto"
+  description = "URL of the Git repo with the source code and other project files"
   type        = string
 }
 
 variable "git_branch" {
-  description = "Rama del repo Git a usar en las instancias EC2"
+  description = "Branch of the Git repo to use on the EC2 instances"
   type        = string
 }
 
 variable "domain_name" {
-  description = "Dominio a usar para la resolución de nombres (DNS)"
+  description = "Domain to use for name resolution (DNS)"
   type        = string
 }
 
 variable "tags" {
-  description = "Etiquetas del proyecto"
+  description = "Project tags"
   type        = map(string)
 }

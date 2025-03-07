@@ -1,6 +1,6 @@
-#* Módulo para crear todos los recursos necesarios para el Application Load Balancer (ALB)
+# Module to create all necessary resources for the Application Load Balancer (ALB)
 
-#* Recurso para crear un balanceador de carga de aplicaciones (ALB)
+# Resource to create an Application Load Balancer (ALB)
 resource "aws_lb" "app_load_balancer" {
   name                       = "app-load-balancer"
   internal                   = false
@@ -14,7 +14,7 @@ resource "aws_lb" "app_load_balancer" {
   }
 }
 
-#* Recurso para crear un grupo de destinos (target group) para el ALB
+# Resource to create a target group for the ALB
 resource "aws_lb_target_group" "alb_target_group" {
   name        = "alb-target-group"
   port        = 80
@@ -36,7 +36,7 @@ resource "aws_lb_target_group" "alb_target_group" {
   }
 }
 
-#* Recurso para crear un listener HTTP para el ALB
+# Resource to create an HTTP listener for the ALB
 resource "aws_lb_listener" "alb_listener_http" {
   load_balancer_arn = aws_lb.app_load_balancer.arn
   port              = "80"
@@ -56,13 +56,13 @@ resource "aws_lb_listener" "alb_listener_http" {
   }
 }
 
-#* Recurso para crear un listener HTTPS para el ALB
+# Resource to create an HTTPS listener for the ALB
 resource "aws_lb_listener" "alb_listener_https" {
   load_balancer_arn = aws_lb.app_load_balancer.arn
   port              = "443"
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08" # Política de seguridad SSL
-  certificate_arn   = var.certificate_ssl_acm_arn # ARN del certificado SSL
+  ssl_policy        = "ELBSecurityPolicy-2016-08" # SSL security policy
+  certificate_arn   = var.certificate_ssl_acm_arn # ARN of the SSL certificate
 
   default_action {
     type             = "forward"

@@ -1,6 +1,6 @@
-#* Definición de variables locales
+#* Definition of local variables
 
-#* Cadena que contiene las etiquetas que se le asignaran a cada recurso
+#* String that contains the tags to be assigned to each resource
 locals {
   sufix = "${var.tags.project}-${var.tags.env}-${var.tags.region}"
 }

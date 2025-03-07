@@ -1,5 +1,5 @@
-#* Definición de variables
+#* Variable definitions
 
-variable "vpc_id" {}        # ID asignado al VPC
-variable "virginia_cidr" {} # Segmento de red a usar en el VPC de la región Virginia (us-east-1)
-variable "sufix" {}         # Etiquetas del proyecto agregadas al Name tags de cada recurso
+variable "vpc_id" {}        # ID assigned to the VPC
+variable "virginia_cidr" {} # Network segment to use in the Virginia region VPC (us-east-1)
+variable "sufix" {}         # Project tags added to the Name tags of each resource

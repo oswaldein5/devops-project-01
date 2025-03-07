@@ -1,6 +1,6 @@
-#* Definición de Outputs
+# Definition of Outputs
 
-#* ARN del certificado SSL generado con ACM
+# ARN of the SSL certificate generated with ACM
 output "certificate_ssl_acm_arn" {
   value = aws_acm_certificate.cert_acm.arn
 }

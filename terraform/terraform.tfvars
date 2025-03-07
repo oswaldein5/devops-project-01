@@ -1,9 +1,9 @@
-#* Asignación de valor a las variables en el contexto global
-virginia_cidr          = "10.0.0.0/16"                              # Segmento de red a usar en el VPC de la región Virginia (us-east-1)                             # Región a usar en AWS  
-vpc_availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"] # Zonas de disponibilidad a usar en la región Virginia (us-east-1)
-domain_name            = "gowebsite.info"                           # Dominio a usar para la resolución de nombres (DNS)
-min_instances          = 2                                          # El número de instancias min. (Apache-PHP) a crear con Auto Scaling Group (ASG)
-max_instances          = 3                                          # El número de instancias max. (Apache-PHP) a crear con Auto Scaling Group (ASG)
+# Assigning values to variables in the global context
+virginia_cidr          = "10.0.0.0/16"                              # Network segment to use in the Virginia region (us-east-1)
+vpc_availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"] # Availability zones to use in the Virginia region (us-east-1)
+domain_name            = "gowebsite.info"                           # Domain to use for DNS resolution
+min_instances          = 2                                          # Minimum number of instances (Apache-PHP) to create with Auto Scaling Group (ASG)
+max_instances          = 3                                          # Maximum number of instances (Apache-PHP) to create with Auto Scaling Group (ASG)
 
 ec2_specs = [
   {
@@ -14,12 +14,12 @@ ec2_specs = [
     "ami"           = "ami-0ca9fb66e076a6e32" # Amazon Linux 2
     "instance_type" = "t2.micro"
   }
-] # Especificaciones de las instancias EC2
+] # EC2 instance specifications
 
-# URL del repositorio Git
+# Git repository URL
 git_repo_url = "https://token@oswaldo.visualstudio.com/repo/_git/repo"
 
-git_branch = "main" # Rama del repositorio Git (Entorno de Producción)
+git_branch = "main" # Git repository branch (Production environment)
 
 tags = {
   "region"       = "us-east-1"
@@ -28,4 +28,4 @@ tags = {
   "IAC"          = "Terraform"
   "IAC-v"        = "1.9.8"
   "project"      = "TFM"
-} # Etiquetas del proyecto
+} # Project tags

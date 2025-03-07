@@ -1,4 +1,4 @@
-#* Bloque de configuración de Terraform
+#* Terraform configuration block
 terraform {
   required_providers {
     aws = {
@@ -9,15 +9,15 @@ terraform {
   required_version = ">=1.9.8"
 }
 
-#* Bloque de configuración del proveedor AWS
+#* AWS provider configuration block
 provider "aws" {
-  # Se define alias 
+  # Define alias 
   # alias = "us-east-1"
 
-  # Se define región
+  # Define region
   region = "us-east-1"
 
-  # Se definen las default tags para todo el proyecto
+  # Define default tags for the entire project
   default_tags {
     tags = var.tags
   }

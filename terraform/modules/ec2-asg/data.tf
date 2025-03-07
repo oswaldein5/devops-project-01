@@ -1,6 +1,6 @@
-#* Definición de Data Sources
+# Definition of Data Sources
 
-#* Obtener el par de claves (key pair) con el nombre "mykey"
+# Get the key pair with the name "mykey"
 data "aws_key_pair" "key" {
   key_name = "mykey"
 }

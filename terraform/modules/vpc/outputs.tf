@@ -1,21 +1,21 @@
-#* Definición de Outputs
+# Definition of Outputs
 
-#* ID asignado al VPC existente
+# ID assigned to the existing VPC
 output "vpc_id" {
   value = aws_vpc.vpc_main.id
 }
 
-#* IDs asignados a las subredes públicas
+# IDs assigned to the public subnets
 output "public_subnet_ids" {
   value = [for subnet in aws_subnet.public_subnet : subnet.id]
 }
 
-#* IDs asignados a las subredes privadas
+# IDs assigned to the private subnets
 output "private_subnet_ids" {
   value = [for subnet in aws_subnet.private_subnet : subnet.id]
 }
 
-#* ID asignado al Internet Gateway
+# ID assigned to the Internet Gateway
 output "internet_gateway_id" {
   value = aws_internet_gateway.igw.id
 }

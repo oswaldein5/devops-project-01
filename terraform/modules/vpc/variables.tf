@@ -1,5 +1,5 @@
-#* Definición de variables
+#* Variable definitions
 
-variable "virginia_cidr" {}          # Segmento de red a usar en el VPC de la región Virginia (us-east-1)
-variable "vpc_availability_zones" {} # Zonas de disponibilidad a usar en la región Virginia (us-east-1)
-variable "sufix" {}                  # Etiquetas del proyecto agregadas al Name tags de cada recurso
+variable "virginia_cidr" {}          # Network segment to use in the Virginia region VPC (us-east-1)
+variable "vpc_availability_zones" {} # Availability zones to use in the Virginia region (us-east-1)
+variable "sufix" {}                  # Project labels added to the Name tags of each resource
