@@ -1,11 +1,11 @@
-#* Módulo para crear las Instancias EC2 (Apache-PHP, MySQL, Bastion) con Auto Scaling Group
+# Module to create EC2 Instances (Apache-PHP, MySQL, Bastion) with Auto Scaling Group
 
-#* Crear Launch Template para instancias EC2 (Apache-PHP)
+# Create Launch Template for EC2 instances (Apache-PHP)
 resource "aws_launch_template" "ec2_srv_web" {
   name          = "srv-web-"
   image_id      = var.ec2_specs[0].ami # Ubuntu Server 24.04 LTS
   instance_type = var.ec2_specs[0].instance_type
-  key_name      = data.aws_key_pair.key.key_name # Llave pre-definida en el portal AWS
+  key_name      = data.aws_key_pair.key.key_name # Pre-defined key in AWS portal
 
   network_interfaces {
     associate_public_ip_address = false
@@ -14,12 +14,12 @@ resource "aws_launch_template" "ec2_srv_web" {
 
   user_data = base64encode(<<-EOF
     #!/bin/bash
-    # Clonar el repositorio Git
+    # Clone the Git repository
     GIT_REPO_URL="${var.git_repo_url}"
     BRANCH="${var.git_branch}"
 
     for i in {1..5}; do
-        git clone --no-checkout --branch $BRANCH $GIT_REPO_URL /home/ubuntu/EcolacMigracion && break || {
+        git clone --no-checkout --branch $BRANCH $GIT_REPO_URL /home/ubuntu/repo && break || {
             echo "Retrying git clone ($i)..."
             sleep 10
         }
@@ -28,23 +28,23 @@ resource "aws_launch_template" "ec2_srv_web" {
         exit 1
     }
 
-    cd /home/ubuntu/EcolacMigracion
+    cd /home/ubuntu/repo
 
-    # Configurar sparse-checkout para clonar solo carpetas específicas
+    # Configure sparse-checkout to clone only specific folders
     git sparse-checkout init --cone
-    git sparse-checkout set app-ecolac-fuentes srv-web
+    git sparse-checkout set php-app srv-web
 
-    # Actualizar el repositorio para obtener solo las carpetas especificadas
+    # Update the repository to get only the specified folders
     git checkout
 
-    # Otorgar permisos de ejecución al script de instalación
-    chmod +x /home/ubuntu/EcolacMigracion/srv-web/scripts/setup-srv-web.sh || {
+    # Grant execution permissions to the setup script
+    chmod +x /home/ubuntu/repo/srv-web/scripts/setup-srv-web.sh || {
       echo "Failed to chmod the setup script"
       exit 1
     }
 
-    # Ejecutar el script de instalación
-    /home/ubuntu/EcolacMigracion/srv-web/scripts/setup-srv-web.sh || {
+    # Execute the setup script
+    /home/ubuntu/repo/srv-web/scripts/setup-srv-web.sh || {
       echo "Failed to execute setup script"
       exit 1
     }
@@ -62,7 +62,7 @@ resource "aws_launch_template" "ec2_srv_web" {
   }
 }
 
-#* Crear Auto Scaling Group para instancias EC2 (Apache-PHP)
+# Create Auto Scaling Group for EC2 instances (Apache-PHP)
 resource "aws_autoscaling_group" "ec2_asg" {
   name              = "ec2-asg"
   min_size          = var.min_instances
@@ -84,7 +84,7 @@ resource "aws_autoscaling_group" "ec2_asg" {
 
 }
 
-#* Crear Auto Scaling Policies para el Auto Scaling Group
+# Create Auto Scaling Policies for the Auto Scaling Group
 resource "aws_autoscaling_policy" "scale_up" {
   name                   = "scale_up"
   scaling_adjustment     = 1
@@ -93,7 +93,7 @@ resource "aws_autoscaling_policy" "scale_up" {
   autoscaling_group_name = aws_autoscaling_group.ec2_asg.name
 }
 
-#* Crear Auto Scaling Policies para el Auto Scaling Group
+# Create Auto Scaling Policies for the Auto Scaling Group
 resource "aws_autoscaling_policy" "scale_down" {
   name                   = "scale_down"
   scaling_adjustment     = -1
@@ -102,7 +102,7 @@ resource "aws_autoscaling_policy" "scale_down" {
   autoscaling_group_name = aws_autoscaling_group.ec2_asg.name
 }
 
-#* Crear Alarmas de CloudWatch para el Auto Scaling Group (cpu > 70% -> scale up)
+# Create CloudWatch Alarms for the Auto Scaling Group (cpu > 70% -> scale up)
 resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   alarm_name          = "high_cpu"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -118,7 +118,7 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   }
 }
 
-#* Crear Alarmas de CloudWatch para el Auto Scaling Group (cpu < 50% -> scale down)
+# Create CloudWatch Alarms for the Auto Scaling Group (cpu < 50% -> scale down)
 resource "aws_cloudwatch_metric_alarm" "low_cpu" {
   alarm_name          = "low_cpu"
   comparison_operator = "LessThanOrEqualToThreshold"
@@ -134,22 +134,22 @@ resource "aws_cloudwatch_metric_alarm" "low_cpu" {
   }
 }
 
-#* Crear Instancia EC2 (MySQL)
+# Create EC2 Instance (MySQL)
 resource "aws_instance" "ec2_mysql" {
   ami                    = var.ec2_specs[0].ami # Ubuntu Server 24.04 LTS
   instance_type          = var.ec2_specs[0].instance_type
   subnet_id              = var.private_subnet_ids[2]
-  key_name               = data.aws_key_pair.key.key_name # Llave pre-definida en el portal AWS
+  key_name               = data.aws_key_pair.key.key_name # Pre-defined key in AWS portal
   vpc_security_group_ids = [var.sg_srv_mysql_id]
 
   user_data = base64encode(<<-EOF
     #!/bin/bash
-    # Clonar el repositorio Git
+    # Clone the Git repository
     GIT_REPO_URL="${var.git_repo_url}"
     BRANCH="${var.git_branch}"
 
     for i in {1..5}; do
-        git clone --no-checkout --branch $BRANCH $GIT_REPO_URL /home/ubuntu/EcolacMigracion && break || {
+        git clone --no-checkout --branch $BRANCH $GIT_REPO_URL /home/ubuntu/repo && break || {
             echo "Retrying git clone ($i)..."
             sleep 10
         }
@@ -158,23 +158,23 @@ resource "aws_instance" "ec2_mysql" {
         exit 1
     }
 
-    cd /home/ubuntu/EcolacMigracion
+    cd /home/ubuntu/repo
 
-    # Configurar sparse-checkout para clonar solo carpetas específicas
+    # Configure sparse-checkout to clone only specific folders
     git sparse-checkout init --cone
     git sparse-checkout set srv-bd
 
-    # Actualizar el repositorio para obtener solo las carpetas especificadas
+    # Update the repository to get only the specified folders
     git checkout
 
-    # Otorgar permisos de ejecución al script de instalación
-    chmod +x /home/ubuntu/EcolacMigracion/srv-bd/scripts/setup-srv-bd.sh || {
+    # Grant execution permissions to the setup script
+    chmod +x /home/ubuntu/repo/srv-bd/scripts/setup-srv-bd.sh || {
       echo "Failed to chmod the setup script"
       exit 1
     }
 
-    # Ejecutar el script de instalación
-    /home/ubuntu/EcolacMigracion/srv-bd/scripts/setup-srv-bd.sh || {
+    # Execute the setup script
+    /home/ubuntu/repo/srv-bd/scripts/setup-srv-bd.sh || {
       echo "Failed to execute setup script"
       exit 1
     }
@@ -188,12 +188,12 @@ resource "aws_instance" "ec2_mysql" {
   }
 }
 
-#* Crear Instancia EC2 (Bastion) para comprobar todas las demás instancias a través de SSH
+# Create EC2 Instance (Bastion) to check all other instances via SSH
 resource "aws_instance" "ec2_bastion" {
   ami                         = var.ec2_specs[1].ami # Amazon Linux 2
   instance_type               = var.ec2_specs[1].instance_type
   subnet_id                   = var.public_subnet_bastion_id
-  key_name                    = data.aws_key_pair.key.key_name # Llave pre-definida en el portal AWS
+  key_name                    = data.aws_key_pair.key.key_name # Pre-defined key in AWS portal
   vpc_security_group_ids      = [var.sg_bastion_id]
   associate_public_ip_address = true
 

@@ -17,14 +17,14 @@ ec2_specs = [
 ] # Especificaciones de las instancias EC2
 
 # URL del repositorio Git
-git_repo_url = "https://8ZgYZsEDNShi0Bfr7Zg3VVsr3TTItMFWWt0INUEI16H3bWSp2edPJQQJ99BAACAAAAAAAAAAAAASAZDORqff@luisguerrerovallejo.visualstudio.com/MigracionEcolac/_git/EcolacMigracion"
+git_repo_url = "https://token@oswaldo.visualstudio.com/repo/_git/repo"
 
 git_branch = "main" # Rama del repositorio Git (Entorno de Producción)
 
 tags = {
   "region"       = "us-east-1"
   "env"          = "PROD"
-  "contributors" = "Oswaldo Solano - Luis Guerrero"
+  "contributors" = "Oswaldo Solano"
   "IAC"          = "Terraform"
   "IAC-v"        = "1.9.8"
   "project"      = "TFM"
