@@ -1,0 +1,68 @@
+########################################################################
+# Description:  AzDO Pipeline for deploying infrastructure on AWS
+# Environment:  Production (branch: main)
+# Author:       Oswaldo Solano
+########################################################################
+
+# No trigger
+trigger:
+  - none
+
+# Run unit test pipeline before deploying infrastructure
+resources:
+  pipelines:
+    - pipeline: unitTestsPipeline
+      project: MigracionEcolac
+      source: Pipeline-Unit-Tests
+      trigger: true
+      branch: main
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+
+stages:
+  - stage: deploy_stage
+    displayName: terraform stage
+    jobs:
+      - job: deploy_job
+        displayName: terraform job
+        steps:
+          - script: echo "Working on branch $(Build.SourceBranchName)"
+            displayName: "Show branch name"
+          - task: TerraformInstaller@1
+            displayName: terraform install
+            inputs:
+              terraformVersion: "latest"
+          - task: TerraformTaskV4@4
+            displayName: Terraform init
+            inputs:
+              provider: "aws"
+              command: "init"
+              workingDirectory: "$(workingDirectory)"
+              backendServiceAWS: "AWSconn"
+              backendAWSBucketName: "bucket-ecolac-prod-01032025"
+              backendAWSKey: "terraform.tfstate"
+          - task: TerraformTaskV4@4
+            displayName: Terraform plan
+            inputs:
+              provider: "aws"
+              command: "plan"
+              workingDirectory: "$(workingDirectory)"
+              environmentServiceNameAWS: "AWSconn"
+          - task: TerraformTaskV4@4
+            displayName: Terraform destroy
+            inputs:
+              provider: "aws"
+              command: "destroy"
+              workingDirectory: "$(workingDirectory)"
+              environmentServiceNameAWS: "AWSconn"
+          - task: TerraformTaskV4@4
+            displayName: Terraform apply
+            inputs:
+              provider: "aws"
+              command: "apply"
+              workingDirectory: "$(workingDirectory)"
+              environmentServiceNameAWS: "AWSconn"

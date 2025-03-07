@@ -1,0 +1,29 @@
+# Enable the rewrite engine
+RewriteEngine On
+
+# Set the default file to serve when a directory is requested
+DirectoryIndex index.php
+
+# Prevent directory listing
+Options -Indexes
+
+# Deny access to .htaccess and other sensitive files
+<FilesMatch "^\.ht">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Deny access to specific sensitive files (e.g., config files)
+<FilesMatch "\.(env|ini|json|xml|yml|yaml)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Redirect all HTTP traffic to HTTPS (if applicable)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Rewrite rules for clean URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?page=$1 [L,QSA]

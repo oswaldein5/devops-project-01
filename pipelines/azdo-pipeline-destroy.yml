@@ -1,0 +1,61 @@
+####################################################################
+# Descripción:  AzDO pipeline to destroy infrastructure on AWS
+# Environment:  Production (branch: main)
+# Author:       Oswaldo Solano
+####################################################################
+
+# No trigger
+trigger:
+  - none
+
+# The pipeline is scheduled to execute at 6:00 AM UTC (1:00 AM Ecuador)
+schedules:
+  - cron: "0 6 * * *"
+    displayName: "Destruir la infraestructura en AWS todos los dias [1:00 AM] en la rama: main"
+    branches:
+      include:
+        - main
+    always: true
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+
+stages:
+  - stage: deploy_stage
+    displayName: terraform stage
+    jobs:
+      - job: deploy_job
+        displayName: terraform job
+        steps:
+          - script: echo "Working on branch $(Build.SourceBranchName)"
+            displayName: "Show branch name"
+          - task: TerraformInstaller@1
+            displayName: terraform install
+            inputs:
+              terraformVersion: "latest"
+          - task: TerraformTaskV4@4
+            displayName: Terraform init
+            inputs:
+              provider: "aws"
+              command: "init"
+              workingDirectory: "$(workingDirectory)"
+              backendServiceAWS: "AWSconn"
+              backendAWSBucketName: "bucket-ecolac-prod-01032025"
+              backendAWSKey: "terraform.tfstate"
+          - task: TerraformTaskV4@4
+            displayName: Terraform plan
+            inputs:
+              provider: "aws"
+              command: "plan"
+              workingDirectory: "$(workingDirectory)"
+              environmentServiceNameAWS: "AWSconn"
+          - task: TerraformTaskV4@4
+            displayName: Terraform destroy
+            inputs:
+              provider: "aws"
+              command: "destroy"
+              workingDirectory: "$(workingDirectory)"
+              environmentServiceNameAWS: "AWSconn"

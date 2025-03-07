@@ -1,0 +1,67 @@
+#########################################################################
+# Descripción:  AzDO Pipeline for Unit Testing in PHP with PHPUnit
+# Environment:  Production (branch: main)
+# Author:       Oswaldo Solano
+#########################################################################
+
+# No trigger
+trigger:
+  - none
+
+# Run environment validation pipeline before running unit tests
+resources:
+  pipelines:
+    - pipeline: validationPipeline
+      project: MigracionEcolac
+      source: Pipeline-Environment-Validation
+      trigger: true
+      branch: main
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  phpVersion: 7.4
+  workingDirectory: "$(System.DefaultWorkingDirectory)"
+
+jobs:
+  - job: unit_tests_job
+    displayName: "Unit Tests"
+    steps:
+      - script: echo "Working on branch $(Build.SourceBranchName)"
+        displayName: "Show branch name"
+      - script: |
+          sudo add-apt-repository ppa:ondrej/php
+          sudo apt-get update
+          sudo apt -y install php$(phpVersion)
+        displayName: "Install PHP $(phpVersion)"
+
+      - script: |
+          sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+          sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+          sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+          sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+          sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+          php -version
+        displayName: "Configuring PHP $(phpVersion)"
+
+      - script: |
+          sudo apt-get install php$(phpVersion)-xdebug
+        displayName: "Install Xdebug"
+
+      - script: |
+          sudo apt-get install php$(phpVersion)-curl
+          sudo apt-get install php$(phpVersion)-common
+          sudo apt-get install php$(phpVersion)-xml
+          sudo apt-get install php$(phpVersion)-mbstring
+          sudo service apache2 restart
+        displayName: "Enable PHP Extensions"
+
+      - script: composer update --no-interaction --prefer-dist --working-dir=$(workingDirectory)/app-ecolac-fuentes
+        displayName: "Install Dependencies"
+
+      - script: |
+          php -d xdebug.mode=coverage ./vendor/bin/phpunit --configuration ./phpunit.xml --colors=always --coverage-text --coverage-clover=coverage.xml
+        workingDirectory: "$(workingDirectory)/app-ecolac-fuentes"
+        displayName: "Running Unit Tests"
+        condition: succeeded()

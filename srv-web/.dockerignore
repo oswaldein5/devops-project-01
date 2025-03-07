@@ -1,0 +1,22 @@
+# Log files
+logs
+*.log
+
+# IDE configuration files
+.vscode
+
+# Version control files
+.git
+.gitignore
+
+# Environment files
+.env
+
+# Temporary and cache files
+tmp
+temp
+*.tmp
+*.cache
+
+# Documentation files
+*.md

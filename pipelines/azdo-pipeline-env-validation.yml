@@ -1,0 +1,49 @@
+##########################################################
+# Descripción:  AzDO Pipeline for Environment Validation
+# Environment:  Production (branch: main)
+# Author:       Oswaldo Solano
+##########################################################
+
+# Pipeline trigger when approving changes (PR) on the main branch
+trigger:
+  - main
+
+# The pipeline is scheduled to execute at 10:30 AM UTC (5:30 AM Ecuador)
+schedules:
+  - cron: "30 10 * * *"
+    displayName: "Deploy infrastructure to AWS every day [5:30 AM] on branch: main"
+    branches:
+      include:
+        - main
+    always: true
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  workingDirectory: "$(System.DefaultWorkingDirectory)"
+
+jobs:
+  - job: validation_job
+    displayName: "Test environment validation"
+    steps:
+      - script: echo "Working on branch $(Build.SourceBranchName)"
+        displayName: "Show branch name"
+      - script: |
+          echo "Working directory: $(workingDirectory)"
+          if [ -d "$(workingDirectory)/app-ecolac-fuentes" ] && \
+            [ -d "$(workingDirectory)/srv-bd" ] && \
+            [ -d "$(workingDirectory)/srv-web" ] && \
+            [ -d "$(workingDirectory)/terraform" ] && \
+            [ -f "$(workingDirectory)/srv-bd/Dockerfile" ] && \
+            [ -f "$(workingDirectory)/srv-bd/confs/my.cnf" ] && \
+            [ -f "$(workingDirectory)/srv-bd/scripts/setup-srv-bd.sh" ] && \
+            [ -f "$(workingDirectory)/srv-web/Dockerfile" ] && \
+            [ -f "$(workingDirectory)/srv-web/confs/000-default.conf" ] && \
+            [ -f "$(workingDirectory)/srv-web/scripts/setup-srv-web.sh" ]; then
+            echo "Directories and files found."
+          else
+            echo "Directories and files not found."
+            exit 1
+          fi
+        displayName: "Validating the existence of the necessary directories and files"
